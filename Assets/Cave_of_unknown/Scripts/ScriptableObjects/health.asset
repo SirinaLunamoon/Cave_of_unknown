@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: health
   m_EditorClassIdentifier: 
   objectName: 
-  sprite: {fileID: 0}
-  quantitty: 0
+  sprite: {fileID: 21300000, guid: d866d32c107ecfd4cad9baee6801184e, type: 3}
+  quantitty: 1
   stackable: 0
-  itemType: 0
+  itemType: 1
