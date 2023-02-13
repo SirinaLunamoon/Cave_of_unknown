@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class Player : Character
 {
-    // Start is called before the first frame update
-    void Start()
+    public HealthBar healthBarPrefab;
+    public Inventory inventoryPrefab;
+    HealthBar healthBar;
+    Inventory inventory;
+     
+    private void Start()
     {
+        inventory = Instantiate(inventoryPrefab);
         
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        hitPoints.value = startingHitPoints;
+        healthBar = Instantiate(healthBarPrefab);
+        healthBar.character = this;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -26,25 +28,38 @@ public class Player : Character
             if (hitObject != null) 
             { 
                 print("Kolizja: " + hitObject.name);
+                bool shouldDisappear = false;
 
                 switch (hitObject.itemType)
                 {
                     case Item.ItemType.COIN:
+                        shouldDisappear = inventory.AddItem(hitObject);
                         break;
                     case Item.ItemType.HEALTH:
-                        AdjustHitPoints(hitObject.quantitty);
+                        shouldDisappear = AdjustHitPoints(hitObject.quantitty);
+                        break;
+                        default: 
                         break;
                 }
 
-                //Destroy an object collide with the player
-                collision.gameObject.SetActive(false);
+                if (shouldDisappear)
+                { 
+                    //Destroy an object collide with the player
+                    collision.gameObject.SetActive(false);
+                }
             }
         }
     }
 
-    public void AdjustHitPoints(int amount)
-    { 
-        hitPoints = hitPoints + amount;
-        print("Nowe punkty: " + amount + ". Razem: " + hitPoints);
+    public bool AdjustHitPoints(int amount)
+    {
+        if (hitPoints.value < maxHitPoints)
+        { 
+            hitPoints.value = hitPoints.value + amount;
+            print("Nowe punkty: " + amount + ". Razem: " + hitPoints.value);
+            return true;
+        }
+
+        return false;
     }
 }
